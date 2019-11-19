@@ -2,6 +2,8 @@ FROM php:7.3-fpm-alpine
 
 ADD bin/* /usr/local/bin/
 
+ENV PHP_INI_DIR /usr/local/etc/php
+
 RUN set -ex \
 	&& ( \
 		docker-php-ext-install pdo_mysql \
@@ -84,12 +86,11 @@ RUN set -ex \
 		&& pecl install xdebug \
 		&& docker-php-ext-enable xdebug \
 		&& docker-php-source delete \
-		&& echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-		&& echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-		&& echo "xdebug.remote_port=9090" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-		&& echo "xdebug.remote_handler=dbgp" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-		&& echo "xdebug.remote_connect_back=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-		&& docker-php-ext-disable xdebug \
+		&& echo "xdebug.remote_enable=on" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
+		&& echo "xdebug.remote_autostart=off" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
+		&& echo "xdebug.remote_port=9090" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
+		&& echo "xdebug.remote_handler=dbgp" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
+		&& echo "xdebug.remote_connect_back=0" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" \
 	)
 
 ENTRYPOINT ["/usr/local/bin/docker-environment"]
