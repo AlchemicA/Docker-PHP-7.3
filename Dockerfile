@@ -9,6 +9,7 @@ RUN set -ex \
 		apk add \
 			--update \
 			--no-cache \
+			git \
 			icu-dev \
 			curl \
 			curl-dev \
